@@ -1,0 +1,79 @@
+
+
+## One-time installs
+
+1. **Node.js:** download the **LTS** installer from https://nodejs.org and keep clicking Next with the defaults. Then open a new PowerShell window and run `node -v`. It must print `v18` or higher.
+2. **XAMPP:** download it from https://www.apachefriends.org and install with the defaults, into `C:\xampp`.
+
+## Every time you want to see the site
+
+**Step 1: Start the database.**
+Open **XAMPP Control Panel** and click **Start** next to **Apache** and **MySQL**. Both should turn green. Apache is only needed for phpMyAdmin in Step 2.
+
+**Step 2: Import the database.** Do this the first time, and again whenever `database/law_firm.sql` changes, which Navid's merge just did.
+1. Go to http://localhost/phpmyadmin.
+2. Click the **Import** tab at the top, with no database selected on the left.
+3. Click **Choose File** and pick `C:\Users\<user>\Documents\GitHub\CSE471\CSE471-project-me\Lawfirm-CSE470\database\law_firm.sql`.
+4. Scroll down and click **Import**.
+5. On the left, `law_firm` should now appear with **8 tables**: appointments, case_tasks, cases, clients, documents, lawyer_availability, lawyers and users.
+
+Importing deletes any data already in `law_firm`.
+
+**Step 3: Open PowerShell in the project folder.**
+```powershell
+cd "C:\Users\<user>\Documents\GitHub\CSE471\CSE471-project-me\Lawfirm-CSE470"
+```
+If you extracted the RAR somewhere else, `cd` into that folder instead. It's the one containing `package.json`, `client` and `server`.
+
+**Step 4: Create the settings file.** Do this the first time only.
+```powershell
+Copy-Item server\.env.example server\.env
+```
+The defaults (user `root`, no password) match XAMPP. If you set a MySQL password, run `notepad server\.env` and put it after `DB_PASS=`.
+
+**Step 5: Install packages.** Do this the first time, and again after pulling changes that touch any `package.json`. It takes 1–3 minutes, and yellow warnings are normal.
+```powershell
+npm run install:all
+```
+
+**Step 6: Start the app.**
+```powershell
+npm run dev
+```
+Wait until these lines show up:
+- `Law Firm API running on http://localhost:5000`
+- `Local: http://localhost:5173/`
+
+Leave this window open, because closing it stops the site.
+
+**Step 7: Open http://localhost:5173 in your browser.**
+
+## Logging in
+
+Always set **Login as** to match the account's role.
+
+| Role | Username | Password | What to try |
+|------|----------|----------|-------------|
+| Admin | `admin` | `admin123` | Admin Panel: approve or reject lawyers, verification history |
+| Lawyer | `sarah_khan` | `password123` | My Schedule, Appointments (accept, reject, reschedule), Documents, **Case Tasks** |
+| Client | `john_doe` | `password123` | Book an appointment, upload documents |
+
+There are more sample accounts with the same password: clients `ayesha_r` and `karim_u`, lawyers `rafiq_ahmed` and `nadia_islam`.
+
+To stop the site, press **Ctrl + C** in the PowerShell window. Next time you only need Steps 1, 3, 6 and 7.
+
+## If something goes wrong
+
+| Problem | Fix |
+|---------|-----|
+| `npm.ps1 cannot be loaded because running scripts is disabled` | Run `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`, answer `Y`, then retry. |
+| `ECONNREFUSED 127.0.0.1:3306` | MySQL isn't running. Start it in XAMPP. |
+| `Unknown database 'law_firm'` or `Table ... doesn't exist` | Step 2 wasn't done, or was done with an old SQL file. Re-import. |
+| `Access denied for user 'root'` | Your MySQL has a password. Put it in `server\.env` after `DB_PASS=`. |
+| Login says "Account role does not match selected role" | Change the **Login as** dropdown. |
+| Apache won't start (port 80 in use) | Skip phpMyAdmin and import from PowerShell with the command below. |
+
+The import command, if you can't use phpMyAdmin:
+```powershell
+& "C:\xampp\mysql\bin\mysql.exe" -u root -e "source C:/Users/<user>/Documents/GitHub/CSE471/CSE471-project-me/Lawfirm-CSE470/database/law_firm.sql"
+```
