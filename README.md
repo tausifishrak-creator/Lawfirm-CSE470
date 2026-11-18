@@ -13,7 +13,7 @@ Open **XAMPP Control Panel** and click **Start** next to **Apache** and **MySQL*
 **Step 2: Import the database.** Do this the first time, and again whenever `database/law_firm.sql` changes, which Navid's merge just did.
 1. Go to http://localhost/phpmyadmin.
 2. Click the **Import** tab at the top, with no database selected on the left.
-3. Click **Choose File** and pick `C:\Users\<user>\Documents\GitHub\CSE471\CSE471-project-me\Lawfirm-CSE470\database\law_firm.sql`.
+3. Click **Choose File** and pick `C:\Users\<user>\Documents\GitHub\<project folder>\Lawfirm-CSE470\database\law_firm.sql`.
 4. Scroll down and click **Import**.
 5. On the left, `law_firm` should now appear with **8 tables**: appointments, case_tasks, cases, clients, documents, lawyer_availability, lawyers and users.
 
@@ -21,7 +21,7 @@ Importing deletes any data already in `law_firm`.
 
 **Step 3: Open PowerShell in the project folder.**
 ```powershell
-cd "C:\Users\<user>\Documents\GitHub\CSE471\CSE471-project-me\Lawfirm-CSE470"
+cd "C:\Users\<user>\Documents\GitHub\<project folder>\Lawfirm-CSE470"
 ```
 If you extracted the RAR somewhere else, `cd` into that folder instead. It's the one containing `package.json`, `client` and `server`.
 
