@@ -34,7 +34,15 @@ async function list(req, res) {
     const userId = req.session.user.user_id;
     const rows = await Document.findByCase(found.case_id);
     res.json({
-        case: { case_id: found.case_id, title: found.title },
+        userRole: req.session.user.role,
+        case: {
+    case_id: found.case_id,
+    title: found.title,
+    case_type: found.case_type,
+    opposing_party: found.opposing_party,
+    court_name: found.court_name,
+    case_number: found.case_number,
+},
         types: DOCUMENT_TYPES,
         documents: rows.map(({ uploaded_by, ...doc }) => ({ ...doc, is_mine: uploaded_by === userId })),
     });

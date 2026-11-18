@@ -1,4 +1,4 @@
-// /cases/:caseId/documents — upload and view documents for a case.
+
 import { useEffect, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import api from '../api/client';
@@ -28,11 +28,29 @@ export default function Documents() {
     const { caseId } = useParams();
     const toast = useToast();
     const { data, error, loading, reload } = useApi(`/cases/${caseId}/documents`);
+
     const [file, setFile] = useState(null);
     const [docType, setDocType] = useState('');
     const [busy, setBusy] = useState(false);
     const [preview, setPreview] = useState(null);
+    const [savingDetails, setSavingDetails] = useState(false);
     const fileInput = useRef(null);
+
+    const [details, setDetails] = useState({
+        opposing_party: '',
+        court_name: '',
+        case_number: '',
+    });
+
+    useEffect(() => {
+        if (data?.case) {
+            setDetails({
+                opposing_party: data.case.opposing_party || '',
+                court_name: data.case.court_name || '',
+                case_number: data.case.case_number || '',
+            });
+        }
+    }, [data]);
 
     const upload = async (e) => {
         e.preventDefault();
@@ -59,6 +77,20 @@ export default function Documents() {
         }
     };
 
+    const saveDetails = async (e) => {
+        e.preventDefault();
+        setSavingDetails(true);
+        try {
+            const result = await api.patch(`/cases/${caseId}/details`, details);
+            toast.success(result.message);
+            reload();
+        } catch (err) {
+            toast.error(err.message);
+        } finally {
+            setSavingDetails(false);
+        }
+    };
+
     const remove = async (doc) => {
         if (!window.confirm(`Delete "${doc.file_name}"? This cannot be undone.`)) return;
         try {
@@ -76,10 +108,63 @@ export default function Documents() {
                 <PageHeader title="📂 Documents">
                     {data && <p className="subtitle">Case: <strong className="gold">{data.case.title}</strong></p>}
                 </PageHeader>
+
                 <PageStatus error={error} loading={loading && !data} />
 
                 {data && (
                     <>
+                        <div className="dashboard_section">
+                            <h2>Case Details & Court Information</h2>
+                            <div className="table_container panel_padded">
+                                {data.userRole === 'lawyer' ? (
+                                    <form className="login_form" onSubmit={saveDetails}>
+                                        <div className="form_group">
+                                            <label htmlFor="opposing_party">Opposing Party Name</label>
+                                            <input
+                                                id="opposing_party"
+                                                type="text"
+                                                value={details.opposing_party}
+                                                onChange={(e) => setDetails({ ...details, opposing_party: e.target.value })}
+                                                required
+                                            />
+                                        </div>
+
+                                        <div className="form_group">
+                                            <label htmlFor="court_name">Court Name</label>
+                                            <input
+                                                id="court_name"
+                                                type="text"
+                                                value={details.court_name}
+                                                onChange={(e) => setDetails({ ...details, court_name: e.target.value })}
+                                                required
+                                            />
+                                        </div>
+
+                                        <div className="form_group">
+                                            <label htmlFor="case_number">Case Number</label>
+                                            <input
+                                                id="case_number"
+                                                type="text"
+                                                value={details.case_number}
+                                                onChange={(e) => setDetails({ ...details, case_number: e.target.value })}
+                                                required
+                                            />
+                                        </div>
+
+                                        <button type="submit" disabled={savingDetails}>
+                                            {savingDetails ? 'Saving…' : 'Save Case Details'}
+                                        </button>
+                                    </form>
+                                ) : (
+                                    <div>
+                                        <p><strong>Opposing Party:</strong> {data.case.opposing_party || 'Not provided yet'}</p>
+                                        <p><strong>Court Name:</strong> {data.case.court_name || 'Not provided yet'}</p>
+                                        <p><strong>Case Number:</strong> {data.case.case_number || 'Not provided yet'}</p>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
                         <div className="dashboard_section">
                             <h2>Upload Document</h2>
                             <div className="table_container panel_padded">

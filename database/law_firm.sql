@@ -55,15 +55,32 @@ CREATE TABLE cases (
     case_id       INT AUTO_INCREMENT PRIMARY KEY,
     client_id     INT NOT NULL,
     lawyer_id     INT DEFAULT NULL,
-    title         VARCHAR(200) NOT NULL,
-    description   TEXT,
-    case_type     VARCHAR(100),
-    status        ENUM('Pending','Accepted','Rejected','In Progress','Waiting for Documents','Scheduled for Hearing','Closed','Won','Lost') 
+        title           VARCHAR(200) NOT NULL,
+    description     TEXT,
+    case_type       VARCHAR(100),
+    opposing_party  VARCHAR(150) DEFAULT NULL,
+    court_name      VARCHAR(200) DEFAULT NULL,
+    case_number     VARCHAR(100) DEFAULT NULL,
+    status          ENUM('Pending','Accepted','Rejected','In Progress','Waiting for Documents','Scheduled for Hearing','Closed','Won','Lost') 
                   NOT NULL DEFAULT 'Pending',
     created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (client_id) REFERENCES clients(client_id) ON DELETE CASCADE,
     FOREIGN KEY (lawyer_id) REFERENCES lawyers(lawyer_id) ON DELETE SET NULL
+) ENGINE=InnoDB;
+
+-- CASE TASKS TABLE
+CREATE TABLE case_tasks (
+    task_id INT AUTO_INCREMENT PRIMARY KEY,
+    case_id INT NOT NULL,
+    lawyer_id INT NOT NULL,
+    task_title VARCHAR(200) NOT NULL,
+    description TEXT,
+    due_date DATE NOT NULL,
+    status ENUM('Pending', 'Done') DEFAULT 'Pending',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (case_id) REFERENCES cases(case_id) ON DELETE CASCADE,
+    FOREIGN KEY (lawyer_id) REFERENCES lawyers(lawyer_id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
 -- ============================================================

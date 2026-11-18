@@ -68,6 +68,10 @@ function LawyerDashboard({ user }) {
                             <DashCard to="/documents" icon="📂" title="Documents">
                                 Upload and manage documents for your cases.
                             </DashCard>
+
+                            <DashCard to="/tasks" icon="✅" title="Case Tasks">
+                                Create tasks, track deadlines, and monitor overdue work.
+                            </DashCard>
                         </div>
                     </>
                 )}

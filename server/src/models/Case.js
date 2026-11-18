@@ -58,7 +58,23 @@ const Case = {
         );
     },
 
-    /** Number of cases per status across the whole platform (admin chart). */
+    /** Update court and opposing-party information for a case. */
+updateDetails(caseId, details) {
+    return db.query(
+        `UPDATE cases
+         SET opposing_party = ?,
+             court_name = ?,
+             case_number = ?
+         WHERE case_id = ?`,
+        [
+            details.opposing_party,
+            details.court_name,
+            details.case_number,
+            caseId
+        ]
+    );
+},
+
     countByStatus() {
         return db.query('SELECT status, COUNT(*) AS count FROM cases GROUP BY status');
     },

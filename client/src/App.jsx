@@ -2,6 +2,7 @@
 import { Link, Route, Routes } from 'react-router-dom';
 import Layout from './components/Layout';
 import ProtectedRoute from './components/ProtectedRoute';
+import CaseTasks from './pages/CaseTasks';
 
 import Landing from './pages/Landing';
 import Login from './pages/Login';
@@ -45,6 +46,7 @@ export default function App() {
                 {/* Lawyer only */}
                 <Route element={<ProtectedRoute roles={['lawyer']} />}>
                     <Route path="/schedule" element={<Schedule />} />
+                    <Route path="/tasks" element={<CaseTasks />} />
                 </Route>
 
                 {/* Admin only */}
