@@ -5,7 +5,7 @@
 1. **Node.js:** download the **LTS** installer from https://nodejs.org and keep clicking Next with the defaults. Then open a new PowerShell window and run `node -v`. It must print `v18` or higher.
 2. **XAMPP:** download it from https://www.apachefriends.org and install with the defaults, into `C:\xampp`.
 
-## Every time you want to see the site
+## Every time it is needed see the site
 
 **Step 1: Start the database.**
 Open **XAMPP Control Panel** and click **Start** next to **Apache** and **MySQL**. Both should turn green. Apache is only needed for phpMyAdmin in Step 2.
