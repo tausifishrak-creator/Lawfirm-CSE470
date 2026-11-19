@@ -26,9 +26,8 @@ function normalizeHash(hash) {
 async function login(req, res) {
     const username = (req.body.username || '').trim();
     const password = (req.body.password || '').trim();
-    const role = (req.body.role || '').trim();
 
-    if (!username || !password || !role) {
+    if (!username || !password) {
         throw new HttpError(400, 'Please fill in all fields.');
     }
 
@@ -36,9 +35,7 @@ async function login(req, res) {
     if (!user || !(await bcrypt.compare(password, normalizeHash(user.password)))) {
         throw new HttpError(401, 'Invalid username or password.');
     }
-    if (user.role !== role) {
-        throw new HttpError(403, 'Account role does not match selected role.');
-    }
+    //no need for role check here because the user role is already stored in the database and will be returned in the session
 
     // New session id on login (prevents session fixation).
     await new Promise((resolve, reject) => req.session.regenerate((err) => (err ? reject(err) : resolve())));

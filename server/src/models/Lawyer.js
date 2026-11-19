@@ -71,7 +71,7 @@ const Lawyer = {
     },
     /**total number of registered Lawyers shown in the landing page */
     async countLawyers() {
-        const countLawyers = await db.queryOne('SELECT COUNT(*) AS count FROM Lawyers')
+        const countLawyers = await db.queryOne('SELECT COUNT(*) AS count FROM lawyers')
         return Number(countLawyers.count);
     },
 };

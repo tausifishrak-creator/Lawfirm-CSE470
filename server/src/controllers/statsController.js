@@ -7,4 +7,5 @@ async function publicStatistics(req, res) {
     const [lawyers, casesWon] = await Promise.all([Lawyer.countLawyers(), Case.countcaseswon()]);
     res.json({ lawyers, casesWon});
 }
-module.exports = {publicStats};
+
+module.exports = {publicStatistics};

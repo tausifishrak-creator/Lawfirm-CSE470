@@ -2,5 +2,6 @@ const express = require('express');
 const stats = require('../controllers/statsController');
 const router = express.Router();
 
-router.get('public', stats.publicStats);
+
+router.get('/', stats.publicStatistics);
 module.exports = router;

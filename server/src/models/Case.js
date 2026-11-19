@@ -80,7 +80,7 @@ updateDetails(caseId, details) {
     },
     /** Number of cases won for use to show in the landing page*/
     async countcaseswon() {
-        const countcaseswon = await db.queryOne('SELECT COUNT(*) AS count FROM cases WHERE status = "Won"');
+        const countcaseswon = await db.queryOne("SELECT COUNT(*) AS count FROM cases WHERE status = 'Won'");
         return Number(countcaseswon.count);
     },
 };

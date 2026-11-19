@@ -7,7 +7,7 @@ export default function Login() {
     const { user, login } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
-    const [form, setForm] = useState({ username: '', password: '', role: 'client' });
+    const [form, setForm] = useState({ username: '', password: '' });
     const [error, setError] = useState('');
     const [busy, setBusy] = useState(false);
 
@@ -21,7 +21,7 @@ export default function Login() {
         setBusy(true);
         setError('');
         try {
-            const loggedIn = await login(form.username, form.password, form.role);
+            const loggedIn = await login(form.username, form.password);
             const from = location.state && location.state.from;
             navigate(from || (loggedIn.role === 'admin' ? '/admin' : '/dashboard'), { replace: true });
         } catch (err) {
@@ -53,14 +53,7 @@ export default function Login() {
                             <input id="password" name="password" type="password" placeholder="Enter your password"
                                 value={form.password} onChange={change} required />
                         </div>
-                        <div className="form_group">
-                            <label htmlFor="role">Login as</label>
-                            <select id="role" name="role" value={form.role} onChange={change}>
-                                <option value="client">Client</option>
-                                <option value="lawyer">Lawyer</option>
-                                <option value="admin">Admin</option>
-                            </select>
-                        </div>
+                        
                         <input type="submit" value={busy ? 'Signing in…' : 'Sign In'} disabled={busy} />
                     </form>
                     <p className="form_footer">Don&apos;t have an account? <Link to="/register">Register here</Link></p>
