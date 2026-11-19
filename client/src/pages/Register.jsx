@@ -127,7 +127,7 @@ export default function Register() {
                                 </div>
                                 <div className="form_group">
                                     <label htmlFor="consultation_fee">Consultation Fee (BDT)</label>
-                                    <input id="consultation_fee" name="consultation_fee" type="number" min="0" step="any" placeholder="e.g. 3000"
+                                    <input id="consultation_fee" name="consultation_fee" type="number" min="0" step="1000" placeholder="e.g. 3000"
                                         value={form.consultation_fee} onChange={change} required />
                                 </div>
                                 <div className="form_group">

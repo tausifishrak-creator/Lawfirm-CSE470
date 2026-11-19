@@ -78,6 +78,11 @@ updateDetails(caseId, details) {
     countByStatus() {
         return db.query('SELECT status, COUNT(*) AS count FROM cases GROUP BY status');
     },
+    /** Number of cases won for use to show in the landing page*/
+    async countcaseswon() {
+        const countcaseswon = await db.queryOne('SELECT COUNT(*) AS count FROM cases WHERE status = "Won"');
+        return Number(countcaseswon.count);
+    },
 };
 
 module.exports = Case;
