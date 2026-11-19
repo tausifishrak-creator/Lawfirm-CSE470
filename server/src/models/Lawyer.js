@@ -11,6 +11,49 @@ const Lawyer = {
         );
     },
 
+    /** Public profile of one lawyer (shown on the "Submit a Case" page). */
+    findPublicById(lawyerId) {
+        return db.queryOne(
+            `SELECT l.lawyer_id, u.full_name, l.specialization, l.location, l.experience_years,
+                    l.consultation_fee, l.bio, l.is_verified
+             FROM lawyers l JOIN users u ON l.user_id = u.user_id
+             WHERE l.lawyer_id = ?`,
+            [lawyerId]
+        );
+    },
+
+    async getUserId(lawyerId) {
+        const row = await db.queryOne('SELECT user_id FROM lawyers WHERE lawyer_id = ?', [lawyerId]);
+        return row ? row.user_id : null;
+    },
+
+    /** Verified lawyers matching the optional filters (clients choose one to send a case to). */
+    search({ specialization, location, minExperience, maxFee }) {
+        let sql = `SELECT l.lawyer_id, u.full_name, l.specialization, l.location, l.experience_years,
+                          l.consultation_fee, l.bio
+                   FROM lawyers l JOIN users u ON l.user_id = u.user_id
+                   WHERE l.is_verified = 1`;
+        const params = [];
+        if (specialization) {
+            sql += ' AND l.specialization = ?';
+            params.push(specialization);
+        }
+        if (location) {
+            sql += ' AND LOWER(l.location) LIKE LOWER(?)';
+            params.push(`%${location}%`);
+        }
+        if (minExperience > 0) {
+            sql += ' AND l.experience_years >= ?';
+            params.push(minExperience);
+        }
+        if (maxFee > 0) {
+            sql += ' AND l.consultation_fee <= ?';
+            params.push(maxFee);
+        }
+        sql += ' ORDER BY u.full_name';
+        return db.query(sql, params);
+    },
+
     async create(data, conn = null) {
         const sql = `INSERT INTO lawyers (user_id, specialization, location, experience_years, consultation_fee,
                                           bio, verification_doc, verification_status)

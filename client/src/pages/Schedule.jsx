@@ -1,9 +1,10 @@
-// Lawyer: weekly availability grid (days x 7 slots).
+// Lawyer: weekly availability grid (days x 7 slots) and the availability calendar for specific dates.
 import { useEffect, useState } from 'react';
 import api from '../api/client';
 import { useToast } from '../context/ToastContext';
 import useApi from '../hooks/useApi';
 import { PageHeader, PageStatus } from '../components/ui';
+import AvailabilityCalendar from '../components/AvailabilityCalendar';
 
 const ALL_DAYS = ['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 
@@ -13,6 +14,7 @@ export default function Schedule() {
     const [schedule, setSchedule] = useState({});
     const [formError, setFormError] = useState('');
     const [busy, setBusy] = useState(false);
+    const [savedAt, setSavedAt] = useState(0); // tells the calendar to reload after saving
 
     useEffect(() => {
         if (data) setSchedule(data.schedule);
@@ -33,6 +35,7 @@ export default function Schedule() {
         try {
             const result = await api.put('/schedule', { schedule });
             toast.success(result.message);
+            setSavedAt(Date.now());
         } catch (err) {
             setFormError(err.message);
         } finally {
@@ -51,6 +54,7 @@ export default function Schedule() {
 
                 {data && (
                     <div className="dashboard_section">
+                        <h2>Weekly Hours</h2>
                         <div className="schedule_rules">
                             <ul>
                                 <li>You must select at least <strong>3 days</strong> per week.</li>
@@ -98,6 +102,8 @@ export default function Schedule() {
                         </form>
                     </div>
                 )}
+
+                {data && <AvailabilityCalendar refreshKey={savedAt} />}
             </section>
         </main>
     );

@@ -1,6 +1,7 @@
 // Controller: data for the lawyer and admin dashboards.
 const Case = require('../models/Case');
 const Lawyer = require('../models/Lawyer');
+const Notification = require('../models/Notification');
 const { currentLawyer } = require('../utils/profiles');
 
 function toChart(rows, labelKey, valueKey) {
@@ -10,10 +11,21 @@ function toChart(rows, labelKey, valueKey) {
     };
 }
 
+// GET /api/dashboard/client   (unread notification counts for the dashboard cards)
+async function clientDashboard(req, res) {
+    res.json({ badges: await Notification.unreadBySection(req.session.user.user_id) });
+}
+
 // GET /api/dashboard/lawyer
 async function lawyerDashboard(req, res) {
     const lawyer = await currentLawyer(req);
+    const [pendingCount, badges] = await Promise.all([
+        Case.countPendingForLawyer(lawyer.lawyer_id),
+        Notification.unreadBySection(req.session.user.user_id),
+    ]);
     res.json({
+        pendingCount,
+        badges,
         profile: {
             specialization: lawyer.specialization,
             location: lawyer.location,
@@ -42,4 +54,4 @@ async function adminDashboard(req, res) {
     });
 }
 
-module.exports = { lawyerDashboard, adminDashboard };
+module.exports = { clientDashboard, lawyerDashboard, adminDashboard };

@@ -6,6 +6,8 @@ const router = express.Router();
 router.use('/auth', require('./authRoutes'));
 router.use('/stats', require('./statsRoutes'));
 router.use('/dashboard', require('./dashboardRoutes'));
+router.use('/lawyers', require('./lawyerRoutes'));
+router.use('/notifications', require('./notificationRoutes'));
 router.use('/admin', require('./adminRoutes'));
 router.use('/schedule', require('./scheduleRoutes'));
 router.use('/appointments', require('./appointmentRoutes'));

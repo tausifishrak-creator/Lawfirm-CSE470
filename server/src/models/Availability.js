@@ -14,6 +14,25 @@ const Availability = {
         );
     },
 
+    /** Date-specific changes between two dates (inclusive): [{ override_date, session_slot, is_available }]. */
+    findOverrides(lawyerId, fromDate, toDate) {
+        return db.query(
+            `SELECT override_date, session_slot, is_available FROM availability_overrides
+             WHERE lawyer_id = ? AND override_date BETWEEN ? AND ?`,
+            [lawyerId, fromDate, toDate]
+        );
+    },
+
+    /** Open (true) or close (false) one slot on one date, overriding the weekly hours for that date. */
+    setOverride(lawyerId, date, slotId, available) {
+        return db.query(
+            `INSERT INTO availability_overrides (lawyer_id, override_date, session_slot, is_available)
+             VALUES (?, ?, ?, ?)
+             ON DUPLICATE KEY UPDATE is_available = VALUES(is_available)`,
+            [lawyerId, date, slotId, available ? 1 : 0]
+        );
+    },
+
     /** Map of lawyer_id -> list of working days, for many lawyers at once. */
     async workingDaysFor(lawyerIds) {
         if (lawyerIds.length === 0) return {};

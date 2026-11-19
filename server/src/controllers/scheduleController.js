@@ -2,6 +2,8 @@
 const Availability = require('../models/Availability');
 const HttpError = require('../utils/HttpError');
 const { currentLawyer } = require('../utils/profiles');
+const { dayOfWeek, today } = require('../utils/dates');
+const { slotState } = require('../utils/availability');
 const { SLOTS, WORKING_DAYS } = require('../utils/constants');
 
 // GET /api/schedule
@@ -41,4 +43,28 @@ async function saveSchedule(req, res) {
     res.json({ message: 'Schedule updated successfully!' });
 }
 
-module.exports = { getSchedule, saveSchedule };
+// PUT /api/schedule/dates/:date   body: { slot, available }
+// Open or close one time slot on one specific date (the weekly hours stay as they are).
+async function setDateSlot(req, res) {
+    const lawyer = await currentLawyer(req);
+    const date = req.params.date;
+    const slotId = Number(req.body.slot);
+    const available = Boolean(req.body.available);
+
+    const day = dayOfWeek(date);
+    if (!day) throw new HttpError(400, 'Invalid date.');
+    if (!SLOTS.some((s) => s.id === slotId)) throw new HttpError(400, 'Invalid time slot.');
+    if (date < today()) throw new HttpError(400, 'You cannot change past dates.');
+    if (day === 'Friday') throw new HttpError(400, 'Fridays are holidays and cannot be scheduled.');
+
+    const current = await slotState(lawyer.lawyer_id, date, slotId);
+    if (current.state === 'booked') {
+        throw new HttpError(409, 'This slot has an appointment. Reschedule or reject it first.');
+    }
+    if (current.state === 'past') throw new HttpError(400, 'That time has already passed.');
+
+    await Availability.setOverride(lawyer.lawyer_id, date, slotId, available);
+    res.json({ message: available ? 'Slot opened for booking.' : 'Slot closed for that date.' });
+}
+
+module.exports = { getSchedule, saveSchedule, setDateSlot };

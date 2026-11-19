@@ -13,6 +13,9 @@ import DocumentCases from './pages/DocumentCases';
 import Documents from './pages/Documents';
 import Appointments from './pages/Appointments';
 import Schedule from './pages/Schedule';
+import Cases from './pages/Cases';
+import SearchLawyers from './pages/SearchLawyers';
+import RequestCase from './pages/RequestCase';
 
 function NotFound() {
     return (
@@ -41,6 +44,13 @@ export default function App() {
                     <Route path="/documents" element={<DocumentCases />} />
                     <Route path="/cases/:caseId/documents" element={<Documents />} />
                     <Route path="/appointments" element={<Appointments />} />
+                    <Route path="/cases" element={<Cases />} />
+                </Route>
+
+                {/* Client only */}
+                <Route element={<ProtectedRoute roles={['client']} />}>
+                    <Route path="/lawyers" element={<SearchLawyers />} />
+                    <Route path="/lawyers/:lawyerId/request" element={<RequestCase />} />
                 </Route>
 
                 {/* Lawyer only */}

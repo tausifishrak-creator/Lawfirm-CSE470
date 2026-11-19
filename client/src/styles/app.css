@@ -436,3 +436,563 @@ button:disabled {
         justify-content: flex-end;
     }
 }
+
+/* ---------- Notification bell (navbar) ---------- */
+.nav_bell {
+    position: relative;
+    padding: 0 10px !important;
+    margin-right: 5px;
+}
+
+.nav_count {
+    position: absolute;
+    top: -5px;
+    right: 0;
+    background: #ef4444;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 10px;
+    line-height: 1.2;
+}
+
+.nav_count_inline {
+    background: #ef4444;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 10px;
+}
+
+.dropdown_notifications {
+    right: 0;
+    width: 300px;
+}
+
+.dropdown_list {
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.notif_item.unread {
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+    font-weight: 600;
+}
+
+.notif_item.with_badge {
+    display: flex;
+    justify-content: space-between;
+}
+
+.notif_time {
+    color: #64748b;
+    font-size: 11px;
+    margin-top: 4px;
+    font-weight: 400;
+}
+
+.notif_empty {
+    color: #94a3b8;
+    font-size: 14px;
+    text-align: center;
+    padding: 20px;
+}
+
+.nav_menu_dot {
+    margin-left: 6px;
+}
+
+.dropdown_header span {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.dropdown_link {
+    background: none;
+    border: none;
+    color: #d4a843;
+    font-size: 12px;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+/* ---------- Tabs (Pending Approval / My Cases) ---------- */
+.tab_bar {
+    display: flex;
+    gap: 8px;
+    margin: 10px 0 24px;
+    border-bottom: 1px solid rgba(212, 168, 67, 0.2);
+}
+
+.tab_button {
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: #94a3b8;
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 600;
+    padding: 10px 16px;
+    cursor: pointer;
+    margin-bottom: -1px;
+    transition: color 0.2s, border-color 0.2s;
+}
+
+.tab_button:hover {
+    color: #e2e8f0;
+}
+
+.tab_button.active {
+    color: #d4a843;
+    border-bottom-color: #d4a843;
+}
+
+.tab_button .card_badge {
+    margin-left: 8px;
+}
+
+/* ---------- Case request cards ---------- */
+.request_card .card_details p {
+    margin-bottom: 4px;
+}
+
+.request_actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.request_actions > * {
+    flex: 1;
+}
+
+/* ---------- Modal ---------- */
+.modal_backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(2, 6, 23, 0.75);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 40px 16px;
+    overflow-y: auto;
+    animation: fadeIn 0.2s ease;
+}
+
+.modal_box {
+    width: 100%;
+    max-width: 860px;
+    background: #1e293b;
+    border: 1px solid rgba(212, 168, 67, 0.25);
+    border-radius: 16px;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+    padding: 28px;
+}
+
+.modal_head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.modal_head h2 {
+    color: #f1f5f9;
+    font-size: 1.3rem;
+    margin: 0;
+}
+
+.modal_head p {
+    color: #94a3b8;
+    font-size: 0.9rem;
+    margin-top: 4px;
+}
+
+.modal_close {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid #334155;
+    color: #94a3b8;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    font-size: 18px;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.modal_close:hover {
+    color: #f1f5f9;
+}
+
+/* ---------- Calendar ---------- */
+.calendar_layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    gap: 24px;
+}
+
+.calendar_head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.calendar_head h3 {
+    color: #f1f5f9;
+    font-size: 1.05rem;
+    margin: 0;
+}
+
+.calendar_nav {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid #334155;
+    color: #e2e8f0;
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.calendar_nav:hover:not(:disabled) {
+    border-color: #d4a843;
+    color: #d4a843;
+}
+
+.calendar_grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 6px;
+}
+
+.calendar_weekday {
+    text-align: center;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding-bottom: 4px;
+}
+
+.calendar_day {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    min-height: 42px;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(148, 163, 184, 0.12);
+    border-radius: 10px;
+    color: #e2e8f0;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    transition: border-color 0.15s, background 0.15s;
+}
+
+.calendar_day:hover:not(:disabled) {
+    border-color: #d4a843;
+}
+
+.calendar_day.has_open {
+    background: rgba(34, 197, 94, 0.08);
+    border-color: rgba(34, 197, 94, 0.35);
+}
+
+.calendar_day.is_closed,
+.calendar_day:disabled {
+    color: #475569;
+    background: rgba(15, 23, 42, 0.3);
+    cursor: not-allowed;
+}
+
+.calendar_day.is_today {
+    box-shadow: inset 0 0 0 1px #64748b;
+}
+
+.calendar_day.is_selected {
+    background: #d4a843;
+    border-color: #d4a843;
+    color: #0f172a;
+}
+
+.calendar_day .day_dots {
+    display: flex;
+    gap: 3px;
+    height: 6px;
+}
+
+.calendar_day .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+}
+
+.dot_open {
+    background: #22c55e;
+}
+
+.dot_booked {
+    background: #3b82f6;
+}
+
+.calendar_day.is_selected .dot_open,
+.calendar_day.is_selected .dot_booked {
+    background: #0f172a;
+}
+
+.calendar_legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 12px;
+    font-size: 0.78rem;
+    color: #94a3b8;
+}
+
+.calendar_legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.calendar_legend .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+/* Day panel (time slots of the chosen date) */
+.day_panel {
+    background: rgba(15, 23, 42, 0.5);
+    border: 1px solid rgba(148, 163, 184, 0.12);
+    border-radius: 12px;
+    padding: 18px;
+}
+
+.day_panel h4 {
+    color: #f1f5f9;
+    font-size: 1rem;
+    margin: 0 0 4px;
+}
+
+.day_panel .hint {
+    margin: 0 0 14px;
+}
+
+.slot_list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.slot_chip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+    padding: 11px 14px;
+    border-radius: 10px;
+    border: 1px solid rgba(148, 163, 184, 0.18);
+    background: #1e293b;
+    color: #e2e8f0;
+    font-family: inherit;
+    font-size: 0.88rem;
+    text-align: left;
+}
+
+button.slot_chip {
+    cursor: pointer;
+}
+
+.slot_chip small {
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.slot_chip.state_available {
+    border-color: rgba(34, 197, 94, 0.35);
+}
+
+.slot_chip.state_available small {
+    color: #86efac;
+}
+
+button.slot_chip.state_available:hover {
+    background: rgba(34, 197, 94, 0.08);
+}
+
+.slot_chip.state_booked {
+    border-color: rgba(59, 130, 246, 0.35);
+    background: rgba(59, 130, 246, 0.08);
+}
+
+.slot_chip.state_booked small {
+    color: #93c5fd;
+}
+
+.slot_chip.state_off,
+.slot_chip.state_past {
+    color: #64748b;
+    background: rgba(15, 23, 42, 0.4);
+}
+
+button.slot_chip.state_off:hover {
+    border-color: rgba(34, 197, 94, 0.35);
+    color: #e2e8f0;
+}
+
+.slot_chip.is_chosen,
+button.slot_chip.is_chosen:hover {
+    background: #d4a843;
+    border-color: #d4a843;
+    color: #0f172a;
+}
+
+.slot_chip.is_chosen small {
+    color: #0f172a;
+}
+
+.slot_booking_info {
+    display: block;
+    font-size: 0.78rem;
+    color: #94a3b8;
+    margin-top: 2px;
+}
+
+.booking_confirm {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+.booking_confirm textarea {
+    min-height: 70px;
+}
+
+.booking_summary {
+    color: #e2e8f0;
+    font-size: 0.9rem;
+    margin-bottom: 12px;
+}
+
+.booking_summary strong {
+    color: #d4a843;
+}
+
+.calendar_loading {
+    color: #94a3b8;
+    text-align: center;
+    padding: 40px 0;
+}
+
+@media (max-width: 760px) {
+    .calendar_layout {
+        grid-template-columns: 1fr;
+    }
+
+    .modal_box {
+        padding: 18px;
+    }
+
+    .calendar_day {
+        min-height: 36px;
+        font-size: 0.8rem;
+    }
+}
+
+/* ---------- Find a Lawyer / Submit a Case ---------- */
+.info_box {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 0.85rem;
+    color: #94a3b8;
+}
+
+.working_days {
+    color: #fbbf24;
+    font-size: 14px;
+}
+
+.empty_wide {
+    grid-column: 1 / -1;
+    padding: 60px 20px;
+    text-align: center;
+}
+
+/* ---------- Case requests and status form ---------- */
+.btn_block {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 14px;
+    font-size: 1rem;
+}
+
+.btn_gray {
+    background: #475569 !important;
+    color: #fff !important;
+}
+
+.pending_card {
+    box-shadow: 0 4px 15px rgba(251, 191, 36, 0.1);
+}
+
+.pending_card .card_header {
+    border-bottom-color: rgba(251, 191, 36, 0.3);
+}
+
+.case_description {
+    font-size: 0.9rem;
+    color: #cbd5e1;
+    margin-top: 10px;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    border-radius: 6px;
+    white-space: pre-wrap;
+}
+
+.status_form {
+    display: flex;
+    gap: 10px;
+}
+
+.status_form select {
+    padding: 6px;
+    border-radius: 4px;
+    background: rgba(15, 23, 42, 0.8);
+    color: #fff;
+    border: 1px solid #475569;
+}
+
+.status_form button {
+    padding: 6px 12px;
+    background: #d4a843;
+    border: none;
+    border-radius: 4px;
+    color: #000;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.status_form button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}

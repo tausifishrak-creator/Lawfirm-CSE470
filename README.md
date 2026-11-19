@@ -10,14 +10,16 @@
 **Step 1: Start the database.**
 Open **XAMPP Control Panel** and click **Start** next to **Apache** and **MySQL**. Both should turn green. Apache is only needed for phpMyAdmin in Step 2.
 
-**Step 2: Import the database.** Do this the first time, and again whenever `database/law_firm.sql` changes, which Navid's merge just did.
+**Step 2: Import the database.** Do this the first time, and again whenever `database/law_firm.sql` changes.
 1. Go to http://localhost/phpmyadmin.
 2. Click the **Import** tab at the top, with no database selected on the left.
 3. Click **Choose File** and pick `C:\Users\<user>\Documents\GitHub\<project folder>\Lawfirm-CSE470\database\law_firm.sql`.
 4. Scroll down and click **Import**.
-5. On the left, `law_firm` should now appear with **8 tables**: appointments, case_tasks, cases, clients, documents, lawyer_availability, lawyers and users.
+5. On the left, `law_firm` should now appear with **10 tables**: appointments, availability_overrides, case_tasks, cases, clients, documents, lawyer_availability, lawyers, notifications and users.
 
 Importing deletes any data already in `law_firm`.
+
+**Already have a database and want to keep its data?** Instead of re-importing, run the small update files in `database\migrations\` once, in number order. In phpMyAdmin, select `law_firm` on the left, open the **Import** tab and choose the file. Each one only adds what's new.
 
 **Step 3: Open PowerShell in the project folder.**
 ```powershell
@@ -50,13 +52,15 @@ Leave this window open, because closing it stops the site.
 
 ## Logging in
 
-Always set **Login as** to match the account's role.
+Just enter the username and password. The site knows each account's role and opens the right dashboard.
 
 | Role | Username | Password | What to try |
 |------|----------|----------|-------------|
 | Admin | `admin` | `admin123` | Admin Panel: approve or reject lawyers, verification history |
-| Lawyer | `sarah_khan` | `password123` | My Schedule, Appointments (accept, reject, reschedule), Documents, **Case Tasks** |
-| Client | `john_doe` | `password123` | Book an appointment, upload documents |
+| Lawyer | `sarah_khan` | `password123` | 🔔 notifications, **Pending Approval** (accept or decline case requests), My Cases (update status), My Schedule (weekly hours + availability calendar), Appointments (accept, reject, reschedule, schedule with a client), Documents, Case Tasks |
+| Client | `john_doe` | `password123` | **Find a Lawyer** → submit a case, My Cases, **📅 Schedule** an appointment on the lawyer's calendar, upload documents |
+
+**Try the whole flow:** log in as `john_doe`, go to **Find a Lawyer** and submit a case to Sarah Khan. Log in as `sarah_khan`: the 🔔 bell and **Pending Approval** show the request, so accept it. Back as `john_doe`, open **My Cases** and click **📅 Schedule** to book a free slot. That slot now shows as 🔒 Booked for every other client.
 
 There are more sample accounts with the same password: clients `ayesha_r` and `karim_u`, lawyers `rafiq_ahmed` and `nadia_islam`.
 
@@ -70,7 +74,7 @@ To stop the site, press **Ctrl + C** in the PowerShell window. Next time you onl
 | `ECONNREFUSED 127.0.0.1:3306` | MySQL isn't running. Start it in XAMPP. |
 | `Unknown database 'law_firm'` or `Table ... doesn't exist` | Step 2 wasn't done, or was done with an old SQL file. Re-import. |
 | `Access denied for user 'root'` | Your MySQL has a password. Put it in `server\.env` after `DB_PASS=`. |
-| Login says "Account role does not match selected role" | Change the **Login as** dropdown. |
+| `Table 'law_firm.notifications' doesn't exist` | Your database is older than this update. Re-import `law_firm.sql`, or run the files in `database\migrations\`. |
 | Apache won't start (port 80 in use) | Skip phpMyAdmin and import from PowerShell with the command below. |
 
 The import command, if you can't use phpMyAdmin:

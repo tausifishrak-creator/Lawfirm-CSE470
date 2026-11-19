@@ -60,3 +60,35 @@ export function statusClass(status) {
 export function fileSize(bytes) {
     return `${((Number(bytes) || 0) / 1024).toFixed(1)} KB`;
 }
+
+const LONG_MONTHS = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December',
+];
+const WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+/** "2026-11-24" -> "2026-11" */
+export function monthOf(date) {
+    return String(date || '').slice(0, 7);
+}
+
+/** ("2026-11", 1) -> "2026-12";  ("2026-01", -1) -> "2025-12" */
+export function addMonths(month, delta) {
+    const [year, m] = month.split('-').map(Number);
+    const index = year * 12 + (m - 1) + delta;
+    return `${Math.floor(index / 12)}-${String((index % 12) + 1).padStart(2, '0')}`;
+}
+
+/** "2026-11" -> "November 2026" */
+export function monthLabel(month) {
+    const [year, m] = month.split('-').map(Number);
+    return `${LONG_MONTHS[m - 1]} ${year}`;
+}
+
+/** "2026-11-24" -> "Tuesday, November 24, 2026" */
+export function fullDate(date) {
+    const p = parts(date);
+    if (!p) return '';
+    const weekday = WEEKDAYS[new Date(Date.UTC(p.year, p.month - 1, p.day)).getUTCDay()];
+    return `${weekday}, ${LONG_MONTHS[p.month - 1]} ${p.day}, ${p.year}`;
+}

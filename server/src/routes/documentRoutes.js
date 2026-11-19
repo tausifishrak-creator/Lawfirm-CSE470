@@ -9,6 +9,7 @@ const clientOrLawyer = requireRole('client', 'lawyer');
 
 router.get('/documents/cases', clientOrLawyer, documents.cases);
 router.get('/documents/:documentId/file', clientOrLawyer, documents.file);
+// Clients are refused inside the controller with a clear message; lawyers may delete only their own uploads.
 router.delete('/documents/:documentId', clientOrLawyer, documents.remove);
 router.get('/cases/:caseId/documents', clientOrLawyer, documents.requireCaseAccess, documents.list);
 router.post(

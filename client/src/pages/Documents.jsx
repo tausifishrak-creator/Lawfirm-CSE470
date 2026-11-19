@@ -91,6 +91,7 @@ export default function Documents() {
         }
     };
 
+    // Only lawyers can delete, and only their own uploads. Clients can never delete a document.
     const remove = async (doc) => {
         if (!window.confirm(`Delete "${doc.file_name}"? This cannot be undone.`)) return;
         try {
@@ -220,7 +221,7 @@ export default function Documents() {
                                                                 <button type="button" className="btn_approve btn_view" onClick={() => setPreview(url)}>🖼️ View</button>
                                                             )}
                                                             <a href={`${url}?download=1`} className="btn_approve btn_save">⬇️ Save</a>
-                                                            {doc.is_mine && (
+                                                            {doc.is_mine && data.userRole === 'lawyer' && (
                                                                 <button type="button" className="btn_reject btn_delete" onClick={() => remove(doc)}>🗑️ Delete</button>
                                                             )}
                                                         </td>

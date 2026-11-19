@@ -5,17 +5,23 @@ import useApi from '../hooks/useApi';
 import { PageHeader, PageStatus } from '../components/ui';
 import { money } from '../utils/format';
 
-function DashCard({ to, icon, title, children }) {
+/** Dashboard card; `badge` shows a red count (e.g. unread updates or pending requests). */
+function DashCard({ to, icon, title, badge, children }) {
     return (
         <Link to={to} className="dash_card">
             <div className="dash_card_icon">{icon}</div>
-            <h3>{title}</h3>
+            <h3>
+                {title}
+                {badge > 0 && <span className="card_badge">{badge}</span>}
+            </h3>
             <p>{children}</p>
         </Link>
     );
 }
 
 function ClientDashboard({ user }) {
+    const { data } = useApi('/dashboard/client');
+    const badges = (data && data.badges) || {};
     return (
         <main>
             <section className="dashboard">
@@ -23,11 +29,17 @@ function ClientDashboard({ user }) {
                     <p className="role_badge client_badge">Client</p>
                 </PageHeader>
                 <div className="dashboard_grid">
-                    <DashCard to="/appointments" icon="📅" title="Appointments">
-                        Schedule and manage appointments with your assigned lawyers.
+                    <DashCard to="/lawyers" icon="🔍" title="Find a Lawyer">
+                        Choose a verified lawyer and submit your case to them.
                     </DashCard>
-                    <DashCard to="/documents" icon="📂" title="Documents">
-                        Upload and view contracts, evidence and court notices for your cases.
+                    <DashCard to="/cases" icon="📋" title="My Cases" badge={badges.cases}>
+                        Track your case requests and see when a lawyer accepts them.
+                    </DashCard>
+                    <DashCard to="/appointments" icon="📅" title="Appointments" badge={badges.appointments}>
+                        Book a time on your lawyer&apos;s calendar and see your appointments.
+                    </DashCard>
+                    <DashCard to="/documents" icon="📂" title="Documents" badge={badges.documents}>
+                        Upload and view contracts & agreements between plaintiff and defendant, evidence and court notices for your cases.
                     </DashCard>
                 </div>
             </section>
@@ -59,13 +71,19 @@ function LawyerDashboard({ user }) {
                         </div>
 
                         <div className="dashboard_grid">
+                            <DashCard to="/cases?tab=pending" icon="📥" title="Pending Approval" badge={data.pendingCount}>
+                                Accept or decline new case requests from clients.
+                            </DashCard>
+                            <DashCard to="/cases" icon="📋" title="My Cases" badge={data.badges.cases}>
+                                Update the status of the cases you have accepted.
+                            </DashCard>
                             <DashCard to="/schedule" icon="⏰" title="My Schedule">
-                                Configure your weekly office hours and availability for appointments.
+                                Set your weekly hours and open or close time slots on the calendar.
                             </DashCard>
-                            <DashCard to="/appointments" icon="📅" title="Appointments">
-                                Accept, reject or reschedule appointment requests from clients.
+                            <DashCard to="/appointments" icon="📅" title="Appointments" badge={data.badges.appointments}>
+                                Accept, reject or reschedule requests, or set appointments with your clients.
                             </DashCard>
-                            <DashCard to="/documents" icon="📂" title="Documents">
+                            <DashCard to="/documents" icon="📂" title="Documents" badge={data.badges.documents}>
                                 Upload and manage documents for your cases.
                             </DashCard>
 

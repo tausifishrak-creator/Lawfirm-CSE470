@@ -137,6 +137,34 @@ CREATE TABLE lawyer_availability (
 ) ENGINE=InnoDB;
 
 -- ============================================================
+-- AVAILABILITY OVERRIDES (a lawyer opens or closes one slot on one specific date)
+-- Weekly hours come from lawyer_availability; a row here wins for that date.
+-- ============================================================
+CREATE TABLE availability_overrides (
+    lawyer_id     INT NOT NULL,
+    override_date DATE NOT NULL,
+    session_slot  TINYINT NOT NULL,
+    is_available  TINYINT(1) NOT NULL,
+    PRIMARY KEY (lawyer_id, override_date, session_slot),
+    FOREIGN KEY (lawyer_id) REFERENCES lawyers(lawyer_id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- ============================================================
+-- NOTIFICATIONS TABLE
+-- `link` is the page the notification opens, e.g. /cases?tab=pending
+-- ============================================================
+CREATE TABLE notifications (
+    notification_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id         INT NOT NULL,
+    message         VARCHAR(255) NOT NULL,
+    link            VARCHAR(255) DEFAULT NULL,
+    is_read         TINYINT(1) NOT NULL DEFAULT 0,
+    created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    INDEX idx_notifications_user (user_id, is_read)
+) ENGINE=InnoDB;
+
+-- ============================================================
 -- SAMPLE DATA
 -- ============================================================
 
@@ -202,3 +230,12 @@ INSERT INTO cases (client_id, lawyer_id, title, description, case_type, status) 
 ((SELECT client_id FROM clients c JOIN users u ON c.user_id = u.user_id WHERE u.username = 'karim_u'),
  (SELECT lawyer_id FROM lawyers l JOIN users u ON l.user_id = u.user_id WHERE u.username = 'nadia_islam'),
  'Inheritance Settlement', 'Dividing my late father''s property among the family.', 'Family Law', 'In Progress');
+
+-- One case request still waiting for the lawyer (shows up under Sarah Khan's "Pending Approval")
+INSERT INTO cases (client_id, lawyer_id, title, description, case_type, status) VALUES
+((SELECT client_id FROM clients c JOIN users u ON c.user_id = u.user_id WHERE u.username = 'karim_u'),
+ (SELECT lawyer_id FROM lawyers l JOIN users u ON l.user_id = u.user_id WHERE u.username = 'sarah_khan'),
+ 'Unpaid Salary Claim', 'My former employer has not paid my last three months of salary.', 'Civil Law', 'Pending');
+
+INSERT INTO notifications (user_id, message, link) VALUES
+((SELECT user_id FROM users WHERE username = 'sarah_khan'), 'New case request from Karim Uddin: Unpaid Salary Claim', '/cases?tab=pending');

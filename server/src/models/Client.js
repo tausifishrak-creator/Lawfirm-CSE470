@@ -6,6 +6,11 @@ const Client = {
         return db.queryOne('SELECT client_id, user_id, phone, address FROM clients WHERE user_id = ?', [userId]);
     },
 
+    async getUserId(clientId) {
+        const row = await db.queryOne('SELECT user_id FROM clients WHERE client_id = ?', [clientId]);
+        return row ? row.user_id : null;
+    },
+
     async create({ user_id, phone, address }, conn = null) {
         const sql = 'INSERT INTO clients (user_id, phone, address) VALUES (?, ?, ?)';
         const params = [user_id, phone, address];

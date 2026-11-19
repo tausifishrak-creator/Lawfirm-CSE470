@@ -2,6 +2,7 @@
 const fs = require('fs');
 const Case = require('../models/Case');
 const Document = require('../models/Document');
+const Notification = require('../models/Notification');
 const HttpError = require('../utils/HttpError');
 const { storedPath, absolutePath } = require('../middleware/upload');
 const { currentClient, currentLawyer, toId } = require('../utils/profiles');
@@ -33,6 +34,7 @@ async function list(req, res) {
     const found = req.caseRecord;
     const userId = req.session.user.user_id;
     const rows = await Document.findByCase(found.case_id);
+    await Notification.markLinksRead(userId, [`/cases/${found.case_id}/documents`]);
     res.json({
         userRole: req.session.user.role,
         case: {
@@ -68,6 +70,12 @@ async function upload(req, res) {
         file_size: req.file.size,
     });
 
+    await Notification.push(
+        found.other_user_id,
+        `${req.session.user.full_name} uploaded a document to "${found.title}".`,
+        `/cases/${found.case_id}/documents`
+    );
+
     res.status(201).json({ message: 'Document uploaded successfully!' });
 }
 
@@ -89,8 +97,12 @@ async function file(req, res) {
     res.sendFile(fullPath);
 }
 
-// DELETE /api/documents/:documentId   (only the person who uploaded it)
+// DELETE /api/documents/:documentId   (lawyers only, and only their own uploads)
+// Clients can never delete a document once it has been uploaded.
 async function remove(req, res) {
+    if (req.session.user.role !== 'lawyer') {
+        throw new HttpError(403, 'Clients cannot delete documents once they are uploaded.');
+    }
     const doc = await Document.findById(toId(req.params.documentId));
     if (!doc || doc.uploaded_by !== req.session.user.user_id) {
         throw new HttpError(404, 'Document not found.');
