@@ -13,6 +13,8 @@ router.use('/schedule', require('./scheduleRoutes'));
 router.use('/appointments', require('./appointmentRoutes'));
 router.use('/', require('./caseRoutes'));
 router.use('/tasks', require('./taskRoutes'));
+router.use('/messages', require('./messageRoutes'));
+router.use('/reviews', require('./reviewRoutes'));
 router.use('/', require('./documentRoutes')); // /documents/..., /cases/:caseId/documents
 
 module.exports = router;

@@ -5,7 +5,7 @@ import { queryString } from '../api/client';
 import useApi from '../hooks/useApi';
 import { EmptyState, PageHeader, PageStatus } from '../components/ui';
 import { SPECIALIZATIONS } from '../utils/constants';
-import { money } from '../utils/format';
+import { money, renderStars } from '../utils/format';
 
 const FILTERS = ['specialization', 'location', 'min_experience', 'max_fee'];
 
@@ -77,6 +77,23 @@ export default function SearchLawyers() {
                                     <div className="card_header">
                                         <h3>{lawyer.full_name}</h3>
                                         <span className="verified_badge small_badge">✅ Verified</span>
+                                    </div>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', margin: '4px 0 10px' }}>
+                                        {Number(lawyer.total_reviews) > 0 ? (
+                                            <>
+                                                <span style={{ color: '#eab308', fontSize: '1rem', letterSpacing: '1px' }}>
+                                                    {renderStars(lawyer.avg_rating)}
+                                                </span>
+                                                <strong style={{ color: '#f1f5f9', fontSize: '0.9rem' }}>
+                                                    {Number(lawyer.avg_rating).toFixed(1)}
+                                                </strong>
+                                                <span style={{ color: '#94a3b8', fontSize: '0.8rem' }}>
+                                                    ({lawyer.total_reviews} {Number(lawyer.total_reviews) === 1 ? 'review' : 'reviews'})
+                                                </span>
+                                            </>
+                                        ) : (
+                                            <span style={{ color: '#64748b', fontSize: '0.85rem' }}>⭐ No reviews yet</span>
+                                        )}
                                     </div>
                                     <div className="card_details">
                                         <p><strong>Specialization:</strong> {lawyer.specialization}</p>

@@ -15,9 +15,15 @@ const Lawyer = {
     findPublicById(lawyerId) {
         return db.queryOne(
             `SELECT l.lawyer_id, u.full_name, l.specialization, l.location, l.experience_years,
-                    l.consultation_fee, l.bio, l.is_verified
-             FROM lawyers l JOIN users u ON l.user_id = u.user_id
-             WHERE l.lawyer_id = ?`,
+                    l.consultation_fee, l.bio, l.is_verified,
+                    COALESCE(ROUND(AVG(r.rating), 1), 0) AS avg_rating,
+                    COUNT(r.review_id) AS total_reviews
+             FROM lawyers l
+             JOIN users u ON l.user_id = u.user_id
+             LEFT JOIN reviews r ON r.lawyer_id = l.lawyer_id
+             WHERE l.lawyer_id = ?
+             GROUP BY l.lawyer_id, u.full_name, l.specialization, l.location, l.experience_years,
+                      l.consultation_fee, l.bio, l.is_verified`,
             [lawyerId]
         );
     },
@@ -30,8 +36,12 @@ const Lawyer = {
     /** Verified lawyers matching the optional filters (clients choose one to send a case to). */
     search({ specialization, location, minExperience, maxFee }) {
         let sql = `SELECT l.lawyer_id, u.full_name, l.specialization, l.location, l.experience_years,
-                          l.consultation_fee, l.bio
-                   FROM lawyers l JOIN users u ON l.user_id = u.user_id
+                          l.consultation_fee, l.bio,
+                          COALESCE(ROUND(AVG(r.rating), 1), 0) AS avg_rating,
+                          COUNT(r.review_id) AS total_reviews
+                   FROM lawyers l
+                   JOIN users u ON l.user_id = u.user_id
+                   LEFT JOIN reviews r ON r.lawyer_id = l.lawyer_id
                    WHERE l.is_verified = 1`;
         const params = [];
         if (specialization) {
@@ -50,7 +60,9 @@ const Lawyer = {
             sql += ' AND l.consultation_fee <= ?';
             params.push(maxFee);
         }
-        sql += ' ORDER BY u.full_name';
+        sql += ` GROUP BY l.lawyer_id, u.full_name, l.specialization, l.location, l.experience_years,
+                          l.consultation_fee, l.bio
+                 ORDER BY u.full_name`;
         return db.query(sql, params);
     },
 

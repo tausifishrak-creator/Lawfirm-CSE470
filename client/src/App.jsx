@@ -16,6 +16,8 @@ import Schedule from './pages/Schedule';
 import Cases from './pages/Cases';
 import SearchLawyers from './pages/SearchLawyers';
 import RequestCase from './pages/RequestCase';
+import Messages from './pages/Messages';
+import Reviews from './pages/Reviews';
 
 function NotFound() {
     return (
@@ -45,6 +47,8 @@ export default function App() {
                     <Route path="/cases/:caseId/documents" element={<Documents />} />
                     <Route path="/appointments" element={<Appointments />} />
                     <Route path="/cases" element={<Cases />} />
+                    <Route path="/messages" element={<Messages />} />
+                    <Route path="/reviews" element={<Reviews />} />
                 </Route>
 
                 {/* Client only */}
