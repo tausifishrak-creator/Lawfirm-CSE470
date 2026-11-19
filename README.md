@@ -23,7 +23,7 @@ Importing deletes any data already in `law_firm`.
 ```powershell
 cd "C:\Users\<user>\Documents\GitHub\<project folder>\Lawfirm-CSE470"
 ```
-If you extracted the RAR somewhere else, `cd` into that folder instead. It's the one containing `package.json`, `client` and `server`.
+If the RAR file was extracted somewhere else, `cd` into that folder instead. It's the one containing `package.json`, `client` and `server`.
 
 **Step 4: Create the settings file.** Do this the first time only.
 ```powershell
