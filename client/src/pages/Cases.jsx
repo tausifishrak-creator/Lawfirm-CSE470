@@ -12,15 +12,24 @@ import { EmptyState, PageHeader, PageStatus, StatusBadge } from '../components/u
 import { shortDate } from '../utils/format';
 
 const BOOKABLE = ['Accepted', 'In Progress'];
+const COMPLETED = ['Closed', 'Won', 'Lost'];
 
-function CaseActions({ item, onSchedule }) {
+function CaseActions({ item, onSchedule, isClient }) {
     return (
-        <span className="nowrap">
+        <span className="nowrap" style={{ display: 'inline-flex', gap: '6px', flexWrap: 'wrap' }}>
+            <Link to={`/messages?caseId=${item.case_id}`} className="btn_approve" style={{ background: '#3b82f6', color: '#fff' }}>
+                💬 Message
+            </Link>
             <Link to={`/cases/${item.case_id}/documents`} className="btn_approve btn_save">📂 Documents</Link>
             {BOOKABLE.includes(item.status) && (
-                <button type="button" className="btn_approve btn_receipt" style={{ marginLeft: 6 }} onClick={() => onSchedule(item)}>
+                <button type="button" className="btn_approve btn_receipt" onClick={() => onSchedule(item)}>
                     📅 Schedule
                 </button>
+            )}
+            {isClient && COMPLETED.includes(item.status) && (
+                <Link to={`/reviews?caseId=${item.case_id}`} className="btn_approve" style={{ background: '#eab308', color: '#0f172a', fontWeight: 'bold' }}>
+                    ⭐ Review
+                </Link>
             )}
         </span>
     );
@@ -62,7 +71,7 @@ function ClientCases({ data, onSchedule }) {
                                     <td>
                                         {c.status === 'Pending' && <span className="dim">Waiting for the lawyer</span>}
                                         {c.status === 'Rejected' && <span className="dim">Declined by the lawyer</span>}
-                                        {!['Pending', 'Rejected'].includes(c.status) && <CaseActions item={c} onSchedule={onSchedule} />}
+                                        {!['Pending', 'Rejected'].includes(c.status) && <CaseActions item={c} onSchedule={onSchedule} isClient={true} />}
                                     </td>
                                 </tr>
                             ))}
@@ -182,7 +191,7 @@ function LawyerCaseTable({ data, reload, onSchedule }) {
                             <td>{c.case_type}</td>
                             <td><StatusBadge status={c.status} /></td>
                             <td><StatusForm key={c.status} item={c} statuses={data.statuses} onSave={saveStatus} /></td>
-                            <td><CaseActions item={c} onSchedule={onSchedule} /></td>
+                            <td><CaseActions item={c} onSchedule={onSchedule} isClient={false} /></td>
                         </tr>
                     ))}
                 </tbody>

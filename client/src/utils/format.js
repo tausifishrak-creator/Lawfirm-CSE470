@@ -46,6 +46,31 @@ export function dateTime(value) {
     return `${shortDate(value)} - ${time}`;
 }
 
+/** Relative time, e.g. "Just now", "5m ago", "2h ago", "Yesterday" */
+export function timeAgo(value) {
+    if (!value) return '';
+    const date = new Date(value.replace(' ', 'T'));
+    const diffMs = Date.now() - date.getTime();
+    const diffSec = Math.floor(diffMs / 1000);
+    if (diffSec < 60) return 'Just now';
+    const diffMin = Math.floor(diffSec / 60);
+    if (diffMin < 60) return `${diffMin}m ago`;
+    const diffHour = Math.floor(diffMin / 60);
+    if (diffHour < 24) return `${diffHour}h ago`;
+    const diffDay = Math.floor(diffHour / 24);
+    if (diffDay === 1) return 'Yesterday';
+    if (diffDay < 7) return `${diffDay}d ago`;
+    const diffWeek = Math.floor(diffDay / 7);
+    if (diffWeek < 4) return `${diffWeek}w ago`;
+    return shortDate(value);
+}
+
+/** Render star rating as ★ and ☆ strings */
+export function renderStars(rating) {
+    const r = Math.round(rating) || 0;
+    return '★'.repeat(Math.max(0, Math.min(5, r))) + '☆'.repeat(Math.max(0, 5 - Math.min(5, r)));
+}
+
 /** Today's date in Dhaka as "YYYY-MM-DD" (for <input type="date" min=...>). */
 export function todayISO() {
     return new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Dhaka' }).format(new Date());

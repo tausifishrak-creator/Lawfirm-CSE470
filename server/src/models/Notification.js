@@ -30,12 +30,13 @@ const Notification = {
             'SELECT link, COUNT(*) AS count FROM notifications WHERE user_id = ? AND is_read = 0 GROUP BY link',
             [userId]
         );
-        const badges = { pending: 0, cases: 0, appointments: 0, documents: 0 };
+        const badges = { pending: 0, cases: 0, appointments: 0, documents: 0, messages: 0 };
         for (const row of rows) {
             const link = row.link || '';
             const count = Number(row.count);
             if (link.startsWith('/cases?tab=pending')) badges.pending += count;
             else if (link.includes('/documents')) badges.documents += count;
+            else if (link.startsWith('/messages')) badges.messages += count;
             else if (link.startsWith('/cases')) badges.cases += count;
             else if (link.startsWith('/appointments')) badges.appointments += count;
         }

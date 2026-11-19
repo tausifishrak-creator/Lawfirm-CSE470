@@ -165,6 +165,43 @@ CREATE TABLE notifications (
 ) ENGINE=InnoDB;
 
 -- ============================================================
+-- MESSAGES TABLE (In-App Messaging System)
+-- ============================================================
+CREATE TABLE messages (
+    message_id    INT AUTO_INCREMENT PRIMARY KEY,
+    case_id       INT NOT NULL,
+    sender_id     INT NOT NULL,
+    receiver_id   INT NOT NULL,
+    message       TEXT NOT NULL,
+    is_read       TINYINT(1) NOT NULL DEFAULT 0,
+    created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (case_id) REFERENCES cases(case_id) ON DELETE CASCADE,
+    FOREIGN KEY (sender_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (receiver_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    INDEX idx_messages_case (case_id, created_at),
+    INDEX idx_messages_receiver_read (receiver_id, is_read)
+) ENGINE=InnoDB;
+
+-- ============================================================
+-- REVIEWS TABLE (Lawyer Rating and Review System)
+-- 1 review allowed per case when case is completed (Closed/Won/Lost)
+-- ============================================================
+CREATE TABLE reviews (
+    review_id     INT AUTO_INCREMENT PRIMARY KEY,
+    case_id       INT NOT NULL UNIQUE,
+    client_id     INT NOT NULL,
+    lawyer_id     INT NOT NULL,
+    rating        TINYINT NOT NULL CHECK (rating BETWEEN 1 AND 5),
+    comment       TEXT,
+    created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (case_id) REFERENCES cases(case_id) ON DELETE CASCADE,
+    FOREIGN KEY (client_id) REFERENCES clients(client_id) ON DELETE CASCADE,
+    FOREIGN KEY (lawyer_id) REFERENCES lawyers(lawyer_id) ON DELETE CASCADE,
+    INDEX idx_reviews_lawyer (lawyer_id),
+    INDEX idx_reviews_client (client_id)
+) ENGINE=InnoDB;
+
+-- ============================================================
 -- SAMPLE DATA
 -- ============================================================
 
@@ -239,3 +276,28 @@ INSERT INTO cases (client_id, lawyer_id, title, description, case_type, status) 
 
 INSERT INTO notifications (user_id, message, link) VALUES
 ((SELECT user_id FROM users WHERE username = 'sarah_khan'), 'New case request from Karim Uddin: Unpaid Salary Claim', '/cases?tab=pending');
+
+-- Sample completed case (Won) for client reviews
+INSERT INTO cases (client_id, lawyer_id, title, description, case_type, status) VALUES
+((SELECT client_id FROM clients c JOIN users u ON c.user_id = u.user_id WHERE u.username = 'john_doe'),
+ (SELECT lawyer_id FROM lawyers l JOIN users u ON l.user_id = u.user_id WHERE u.username = 'sarah_khan'),
+ 'Commercial Lease Agreement', 'Drafted and successfully finalized terms for retail shop lease in Banani.', 'Corporate Law', 'Won');
+
+-- Sample review on the completed case
+INSERT INTO reviews (case_id, client_id, lawyer_id, rating, comment) VALUES
+((SELECT case_id FROM cases WHERE title = 'Commercial Lease Agreement' LIMIT 1),
+ (SELECT client_id FROM clients c JOIN users u ON c.user_id = u.user_id WHERE u.username = 'john_doe'),
+ (SELECT lawyer_id FROM lawyers l JOIN users u ON l.user_id = u.user_id WHERE u.username = 'sarah_khan'),
+ 5, 'Advocate Sarah Khan did an exceptional job handling our commercial lease dispute. Highly recommended!');
+
+-- Sample messages for active case 'Property Dispute in Gulshan'
+INSERT INTO messages (case_id, sender_id, receiver_id, message, is_read) VALUES
+((SELECT case_id FROM cases WHERE title = 'Property Dispute in Gulshan' LIMIT 1),
+ (SELECT user_id FROM users WHERE username = 'john_doe'),
+ (SELECT user_id FROM users WHERE username = 'sarah_khan'),
+ 'Hello Advocate Sarah, I have uploaded the plot survey document for your review.', 1),
+((SELECT case_id FROM cases WHERE title = 'Property Dispute in Gulshan' LIMIT 1),
+ (SELECT user_id FROM users WHERE username = 'sarah_khan'),
+ (SELECT user_id FROM users WHERE username = 'john_doe'),
+ 'Thank you John. I have reviewed the deed and we have a very strong case. Let us schedule an appointment next week.', 0);
+

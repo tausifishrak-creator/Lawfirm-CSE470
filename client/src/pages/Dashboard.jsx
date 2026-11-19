@@ -35,6 +35,12 @@ function ClientDashboard({ user }) {
                     <DashCard to="/cases" icon="📋" title="My Cases" badge={badges.cases}>
                         Track your case requests and see when a lawyer accepts them.
                     </DashCard>
+                    <DashCard to="/messages" icon="💬" title="In-App Messages" badge={badges.messages}>
+                        Communicate directly and securely with your assigned lawyer.
+                    </DashCard>
+                    <DashCard to="/reviews" icon="⭐" title="Ratings & Reviews">
+                        Rate and review lawyers for your completed cases.
+                    </DashCard>
                     <DashCard to="/appointments" icon="📅" title="Appointments" badge={badges.appointments}>
                         Book a time on your lawyer&apos;s calendar and see your appointments.
                     </DashCard>
@@ -76,6 +82,12 @@ function LawyerDashboard({ user }) {
                             </DashCard>
                             <DashCard to="/cases" icon="📋" title="My Cases" badge={data.badges.cases}>
                                 Update the status of the cases you have accepted.
+                            </DashCard>
+                            <DashCard to="/messages" icon="💬" title="In-App Messages" badge={data.badges.messages}>
+                                Message clients directly regarding active case progress.
+                            </DashCard>
+                            <DashCard to="/reviews" icon="⭐" title="Ratings & Reviews">
+                                View client ratings, breakdown, and feedback on completed cases.
                             </DashCard>
                             <DashCard to="/schedule" icon="⏰" title="My Schedule">
                                 Set your weekly hours and open or close time slots on the calendar.

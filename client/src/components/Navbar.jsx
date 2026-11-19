@@ -10,12 +10,16 @@ const MENUS = {
     client: [
         { to: '/lawyers', label: 'Find a Lawyer' },
         { to: '/cases', label: 'My Cases' },
+        { to: '/messages', label: 'In-App Messages' },
+        { to: '/reviews', label: 'Ratings & Reviews' },
         { to: '/appointments', label: 'Appointments' },
         { to: '/documents', label: 'Documents' },
     ],
     lawyer: [
         { to: '/cases?tab=pending', label: 'Pending Approval', pending: true },
         { to: '/cases', label: 'My Cases' },
+        { to: '/messages', label: 'In-App Messages' },
+        { to: '/reviews', label: 'Ratings & Reviews' },
         { to: '/schedule', label: 'My Schedule' },
         { to: '/appointments', label: 'Appointments' },
         { to: '/documents', label: 'Documents' },
