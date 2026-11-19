@@ -69,6 +69,11 @@ const Lawyer = {
         );
         return result.affectedRows > 0;
     },
+    /**total number of registered Lawyers shown in the landing page */
+    async countLawyers() {
+        const countLawyers = await db.queryOne('SELECT COUNT(*) AS count FROM Lawyers')
+        return Number(countLawyers.count);
+    },
 };
 
 module.exports = Lawyer;

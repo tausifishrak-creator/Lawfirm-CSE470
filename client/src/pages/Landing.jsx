@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import useApi from  '../hooks/useApi';
 
 function Counter({ target }) {
     const [value, setValue] = useState(0);
@@ -39,6 +40,8 @@ const FEATURES = [
 
 export default function Landing() {
     const { user } = useAuth();
+    const {data: stats } = useApi('/stats');
+
     if (user) return <Navigate to={user.role === 'admin' ? '/admin' : '/dashboard'} replace />;
 
     return (
@@ -58,8 +61,8 @@ export default function Landing() {
                         <Link to="/login" className="btn_hero_secondary">Sign In</Link>
                     </div>
                     <div className="hero_stats">
-                        <div className="stat"><Counter target={500} />+<span>Verified Lawyers</span></div>
-                        <div className="stat"><Counter target={10000} />+<span>Cases Won</span></div>
+                        <div className="stat"><Counter target={stats ? stats.lawyers : 0} /><span>Registered Lawyers</span></div>
+                        <div className="stat"><Counter target={stats ? stats.casesWon : 0} /><span>Cases Won</span></div>
                         <div className="stat"><Counter target={24} />/7<span>Realtime Tracking</span></div>
                     </div>
                 </div>
